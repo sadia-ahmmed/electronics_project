@@ -14,9 +14,10 @@ void runServo(int id,int s_min, int s_max,int dir=1){
     }
   }
 class FileSorter{
+  public:
   int pivotPin0=0,pivotPin1=1;
   int buzzerPin=13;
-  int ir0=22,ir1=23,ir3=24, ir4=25;
+  int ir0=22,ir1=23,ir2=24, ir3=25;
   int locations[2]={-1,-1};
   void init(){
     pinMode(buzzerPin,OUTPUT);
@@ -61,6 +62,7 @@ class FileSorter{
 };
 
 class JuiceMachine{
+  public:
    int icePin=5,juicePin=4;
    int buzzerPin=13;
    int ir0=26,ir1=27;
@@ -105,17 +107,19 @@ class JuiceMachine{
      }
    }
 };
+Stepper pillStepper(2048,8,9,10,11);
 class PillBox{
-  Stepper pillStepper(2048,8,9,10,11);
+  public:
   void getPill(int delay_amm){
     delay(delay_amm);
     pillStepper.step(512);
   }
 };
 class PrayerMat{
+  public:
   int servoPin=6;
   void init(){
-    pinMode(serbvoPin(6));
+    pinMode(servoPin,INPUT);
   }
   void pullDown(){
     runServo(servoPin,150,600,1);
@@ -132,8 +136,9 @@ JuiceMachine jm;
 PillBox pb;
 PrayerMat pm;
 class Controller{
-  int btns[]={28,29,30,31,32,33};
-  int states[]={0,0,0,0,0,0};
+  public:
+  int btns[6]={28,29,30,31,32,33};
+  int states[6]={0,0,0,0,0,0};
   void init(){
     for(int i=0;i<6;i++){
       pinMode(btns[i],INPUT);
@@ -146,7 +151,7 @@ class Controller{
       }else{
         pm.pullDown();
       }
-      states[0]=!states[0]
+      states[0]=!states[0];
     }
     if(btns[1]){
       pb.getPill(300);
@@ -155,17 +160,16 @@ class Controller{
       fs.getFile("11");
     }
     if(!btns[2] && btns[3]){
-      fs.getFile("01")
+      fs.getFile("01");
     }
 
   }
-}
+};
 Controller cr;
 void setup(){
   Serial.begin(9600);
   fs.init();
   jm.init();
-  pb.init();
   pm.init();
   cr.init();
 }
